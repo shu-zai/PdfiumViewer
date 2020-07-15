@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Text;
 
 namespace ShuZai.PdfiumViewer
 {
+    /// <summary>
+    /// PDF 打印对象
+    /// </summary>
     internal class PdfPrintDocument : PrintDocument
     {
         private readonly IPdfDocument _document;
@@ -16,26 +17,19 @@ namespace ShuZai.PdfiumViewer
 
         protected virtual void OnBeforeQueryPageSettings(QueryPageSettingsEventArgs e)
         {
-            var ev = BeforeQueryPageSettings;
-            if (ev != null)
-                ev(this, e);
+            BeforeQueryPageSettings?.Invoke(this, e);
         }
 
         public event PrintPageEventHandler BeforePrintPage;
 
         protected virtual void OnBeforePrintPage(PrintPageEventArgs e)
         {
-            var ev = BeforePrintPage;
-            if (ev != null)
-                ev(this, e);
+            BeforePrintPage?.Invoke(this, e);
         }
 
         public PdfPrintDocument(IPdfDocument document, PdfPrintSettings settings)
         {
-            if (document == null)
-                throw new ArgumentNullException("document");
-
-            _document = document;
+            _document = document ?? throw new ArgumentNullException(nameof(document));
             _settings = settings;
         }
 
@@ -198,19 +192,17 @@ namespace ShuZai.PdfiumViewer
             left += (width - scaledWidth) / 2;
             top += (height - scaledHeight) / 2;
 
-            _document.Render(
+            // PDF转图像
+            Image image = _document.Render(
                 page,
-                e.Graphics,
+                AdjustDpi(e.Graphics.DpiX, scaledWidth),
+                AdjustDpi(e.Graphics.DpiY, scaledHeight),
                 e.Graphics.DpiX,
                 e.Graphics.DpiY,
-                new Rectangle(
-                    AdjustDpi(e.Graphics.DpiX, left),
-                    AdjustDpi(e.Graphics.DpiY, top),
-                    AdjustDpi(e.Graphics.DpiX, scaledWidth),
-                    AdjustDpi(e.Graphics.DpiY, scaledHeight)
-                ),
+                PdfRotation.Rotate0,
                 PdfRenderFlags.ForPrinting | PdfRenderFlags.Annotations
             );
+            e.Graphics.DrawImageUnscaled(image, e.PageBounds.Location);
         }
 
         private static void Swap(ref double a, ref double b)
