@@ -5,16 +5,16 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("PdfViewer.Demo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Pieter van Ginkel")]
+[assembly: AssemblyCompany("ShuZai")]
 [assembly: AssemblyProduct("PdfViewer.Demo")]
-[assembly: AssemblyCopyright("Pieter van Ginkel © 2012-2015")]
+[assembly: AssemblyCopyright("Copyright (C) 2019-2020 ShuZai")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
 
-[assembly: Guid("975b4cd9-0202-4b28-80a6-faac73629152")]
+[assembly: Guid("A1135AED-A3B2-4F00-851C-BB09A0E4254C")]
 
-[assembly: AssemblyVersion("2.11.0.0")]
-[assembly: AssemblyFileVersion("2.11.0.0")]
+[assembly: AssemblyVersion("2020.1.1.0")]
+[assembly: AssemblyFileVersion("2020.1.1.0")]

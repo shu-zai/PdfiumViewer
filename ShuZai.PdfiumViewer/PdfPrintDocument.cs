@@ -174,6 +174,15 @@ namespace ShuZai.PdfiumViewer
             e.HasMorePages = _currentPage < pageCount;
         }
 
+        /// <summary>
+        /// 绘制当前页
+        /// </summary>
+        /// <param name="e">为 PrintPage 事件提供的数据</param>
+        /// <param name="page">当前页码</param>
+        /// <param name="left">所绘制图像的左上角的 x 坐标</param>
+        /// <param name="top">所绘制图像的左上角的 y 坐标</param>
+        /// <param name="width">页面全部区域的矩形区域的宽度</param>
+        /// <param name="height">页面全部区域的矩形区域的高度</param>
         private void RenderPage(PrintPageEventArgs e, int page, double left, double top, double width, double height)
         {
             var size = _document.PageSizes[page];
@@ -189,10 +198,11 @@ namespace ShuZai.PdfiumViewer
             else
                 scaledHeight = height * (pageScale / printScale);
 
+            // 自动居中
             left += (width - scaledWidth) / 2;
             top += (height - scaledHeight) / 2;
 
-            // PDF转图像
+            // 作为图像打印
             Image image = _document.Render(
                 page,
                 AdjustDpi(e.Graphics.DpiX, scaledWidth),
@@ -202,7 +212,7 @@ namespace ShuZai.PdfiumViewer
                 PdfRotation.Rotate0,
                 PdfRenderFlags.ForPrinting | PdfRenderFlags.Annotations
             );
-            e.Graphics.DrawImageUnscaled(image, e.PageBounds.Location);
+            e.Graphics.DrawImageUnscaled(image, (int)left, (int)top);
         }
 
         private static void Swap(ref double a, ref double b)
